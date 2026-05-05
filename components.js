@@ -7,12 +7,12 @@
    ============================================================ */
 function renderHeader() {
   const nav = [
-    { label: "Home",       href: "#home" },
-    { label: "Word Finder",href: "#finder" },
-    { label: "Word Lists", href: "#word-lists" },
-    { label: "Scrabble",   href: "#scrabble" },
-    { label: "Learn",      href: "#learn" },
-    { label: "FAQ",        href: "#faq" },
+    { label: "Home",       href: "/" },
+    { label: "Word Finder",href: "/#finder" },
+    { label: "Word Lists", href: "/#word-lists" },
+    { label: "Scrabble",   href: "/#scrabble" },
+    { label: "Learn",      href: "/#learn" },
+    { label: "FAQ",        href: "/#faq" },
   ];
 
   const navLinks = nav.map(n =>
@@ -26,7 +26,7 @@ function renderHeader() {
   const html = `
     <header class="site-header" role="banner">
       <div class="container header-inner">
-        <a href="#home" class="logo" aria-label="5 Letter Words Home">
+        <a href="/" class="logo" aria-label="5 Letter Words Home">
           <div class="logo-icon" aria-hidden="true">5W</div>
           <span class="logo-text">5Letter<span>Words</span></span>
         </a>
@@ -43,7 +43,7 @@ function renderHeader() {
 
       <nav class="mobile-nav" id="mobileNav" role="navigation" aria-label="Mobile navigation">
         ${mobileNavLinks}
-        <a href="#finder" class="btn btn-primary btn-sm" style="margin-top:8px;align-self:flex-start">Find Words</a>
+        <a href="/#finder" class="btn btn-primary btn-sm" style="margin-top:8px;align-self:flex-start">Find Words</a>
       </nav>
     </header>
   `;
@@ -109,27 +109,27 @@ function renderFooter() {
   ).join('');
 
   const toolLinks = [
-    { label: "5 Letter Word Finder",   href: "#finder" },
-    { label: "Wordle Helper",           href: "#finder" },
-    { label: "Scrabble Word Finder",    href: "#scrabble" },
-    { label: "Pattern Search",          href: "#finder" },
-    { label: "Word of the Day",         href: "#word-of-day" },
+    { label: "5 Letter Word Finder",   href: "/#finder" },
+    { label: "Wordle Helper",           href: "/#finder" },
+    { label: "Scrabble Word Finder",    href: "/#scrabble" },
+    { label: "Pattern Search",          href: "/#finder" },
+    { label: "Word of the Day",         href: "/#word-of-day" },
   ];
 
   const wordLinks = [
-    { label: "Common 5 Letter Words",   href: "#common-words" },
-    { label: "Words with Most Vowels",  href: "#common-words" },
-    { label: "Top Scrabble Words",      href: "#scrabble" },
-    { label: "Words by Length",         href: "#by-length" },
-    { label: "Quick Reference Lists",   href: "#quick-ref" },
+    { label: "Common 5 Letter Words",   href: "/#common-words" },
+    { label: "Words with Most Vowels",  href: "/#common-words" },
+    { label: "Top Scrabble Words",      href: "/#scrabble" },
+    { label: "Words by Length",         href: "/#by-length" },
+    { label: "Quick Reference Lists",   href: "/#quick-ref" },
   ];
 
   const learnLinks = [
-    { label: "What Are 5 Letter Words?", href: "#learn" },
-    { label: "5 Letter Words in Wordle", href: "#learn" },
-    { label: "Scrabble Scoring Guide",   href: "#scrabble" },
-    { label: "Word Length Guide",        href: "#word-length-guide" },
-    { label: "FAQ",                       href: "#faq" },
+    { label: "What Are 5 Letter Words?", href: "/#learn" },
+    { label: "5 Letter Words in Wordle", href: "/#learn" },
+    { label: "Scrabble Scoring Guide",   href: "/#scrabble" },
+    { label: "Word Length Guide",        href: "/#word-length-guide" },
+    { label: "FAQ",                       href: "/#faq" },
   ];
 
   const makeLinks = arr => arr.map(l =>
@@ -145,7 +145,7 @@ function renderFooter() {
 
           <!-- Brand -->
           <div class="footer-brand">
-            <a href="#home" class="logo" style="margin-bottom:16px;display:inline-flex">
+            <a href="/" class="logo" style="margin-bottom:16px;display:inline-flex">
               <div class="logo-icon" aria-hidden="true">5W</div>
               <span class="logo-text" style="color:white;margin-left:10px">5Letter<span>Words</span></span>
             </a>
@@ -185,10 +185,10 @@ function renderFooter() {
         <div class="footer-bottom">
           <p>© ${currentYear} <strong style="color:white">5LetterWords.github.io</strong> — All rights reserved.</p>
           <div class="footer-bottom-links">
-            <a href="#home">Privacy Policy</a>
-            <a href="#home">Terms of Use</a>
-            <a href="#home">Contact</a>
-            <a href="#home">Sitemap</a>
+            <a href="privacy">Privacy Policy</a>
+            <a href="terms">Terms of Use</a>
+            <a href="contact">Contact</a>
+            <a href="about">About</a>
           </div>
         </div>
 
