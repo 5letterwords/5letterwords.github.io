@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>About Meeral - Web Developer & SEO Expert</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
+  <style>
+    .about-content { padding: 80px 0; background: white; }
+    .about-flex { display: grid; grid-template-columns: 1fr 1.2fr; gap: 60px; align-items: center; }
+    .about-image { position: relative; border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow-lg); }
+    .about-image img { width: 100%; display: block; }
+    .about-text h2 { margin-bottom: 20px; color: var(--primary); }
+    .about-text p { margin-bottom: 20px; color: var(--text-light); font-size: 1.05rem; }
+    @media (max-width: 900px) { .about-flex { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+  <div id="header-root"></div>
+
+  <main class="about-content">
+    <div class="container">
+      <div class="about-flex">
+        <div class="about-image reveal">
+           <!-- Replace with your professional photo -->
+           <div style="background: var(--primary-light); height: 450px; display: flex; align-items: center; justify-content: center; font-size: 5rem;">👨‍💻</div>
+        </div>
+        <div class="about-text">
+          <span class="section-tag">Meet the Expert</span>
+          <h2>Hello, I'm Meeral</h2>
+          <p>I am a dedicated <strong>Web Developer and SEO Expert</strong> with a passion for building high-performance, search-optimized web applications[cite: 1]. I specialize in creating tools that are not only functional but also rank at the top of search engines.</p>
+          <p>With 5 Letter Words, my goal was to combine technical precision with a clean user experience. Whether you are a Wordle enthusiast or a competitive Scrabble player, I’ve designed this platform to be your ultimate vocabulary resource[cite: 2].</p>
+          <div class="hero-cta" style="justify-content: flex-start;">
+            <a href="contact.html" class="btn btn-primary">Let's Collaborate</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div id="footer-root"></div>
+
+  <script src="words-data.js"></script>
+  <script src="components.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
