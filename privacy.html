@@ -7,25 +7,54 @@
   <link rel="stylesheet" href="style.css" />
   <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png">
   <style>
-    .legal-content { padding: 60px 0; max-width: 850px; margin: 0 auto; }
-    .legal-card { background: var(--bg-card); padding: 40px; border-radius: var(--radius); border: 1.5px solid var(--border); box-shadow: var(--shadow); }
-    .legal-card h1 { margin-bottom: 24px; color: var(--primary); }
-    .legal-card h2 { font-size: 1.4rem; margin: 32px 0 16px; color: var(--text); }
-    .legal-card p { margin-bottom: 16px; color: var(--text-light); }
-    .legal-card ul { margin-bottom: 20px; padding-left: 20px; list-style: disc; color: var(--text-light); }
-    .last-updated { font-weight: 700; color: var(--primary); margin-bottom: 40px; display: block; }
+    .legal-content { padding: 60px 0; background: white; }
+    .legal-body { max-width: 800px; margin: 0 auto; }
+    .legal-body h2 { margin: 32px 0 16px; color: var(--primary); font-size: 1.8rem; }
+    .legal-body p { margin-bottom: 20px; color: var(--text-light); }
+    .legal-body ul { margin-bottom: 20px; padding-left: 20px; list-style: disc; color: var(--text-light); }
+    .legal-body li { margin-bottom: 8px; }
   </style>
 </head>
 <body>
   <div id="header-root"></div>
 
-  <main class="container legal-content">
-    <div class="legal-card">
-      <span class="section-tag">Legal</span>
-      <h1>Privacy Policy</h1>
-      <span class="last-updated">Last Updated: May 6, 2026</span>
+  <main class="legal-content">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Legal</span>
+        <h1>Privacy Policy</h1>
+        <p>Last Updated: May 6, 2026</p>
+      </div>
 
-      <p>At 5 Letter Words, accessible from https://5letterwords.github.io/, one of our main priorities is the privacy of our visitors. This Privacy Policy document contains types of information that is collected and recorded by 5 Letter Words and how we use it.</p>
+      <div class="legal-body">
+        <p>Welcome to 5 Letter Words. We value your privacy and are committed to protecting your personal data. This policy explains how we handle information when you use our word finder tools.</p>
 
-      <h2>1. Log Files</h2>
-      <p>5 Letter Words follows a standard procedure of using log files. These files log visitors when they visit websites. The informationNormally I can help with things like this, but I don't seem to have access to that content. You can try again or ask me for something else.
+        <h2>1. Information We Collect</h2>
+        <p>As a free utility site, we aim to collect as little data as possible:</p>
+        <ul>
+          <li><strong>Usage Data:</strong> We may collect non-identifying information such as browser type, time spent on pages, and search queries to improve our algorithms.</li>
+          <li><strong>Cookies:</strong> We use essential cookies to remember your preferences (like Scrabble score settings) and for basic analytics.</li>
+        </ul>
+
+        <h2>2. How We Use Your Information</h2>
+        <p>We use the collected data to maintain our word database, optimize the "Wordle Helper" tool, and ensure the website remains fast and responsive for all users.</p>
+
+        <h2>3. Third-Party Services</h2>
+        <p>We may use third-party analytics (like Google Analytics) to understand site traffic. These services may collect information sent by your browser as part of a web page request.</p>
+
+        <h2>4. Data Security</h2>
+        <p>While no method of transmission over the internet is 100% secure, we use industry-standard measures to protect any data processed through our site.</p>
+
+        <h2>5. Contact Us</h2>
+        <p>If you have questions about this Privacy Policy, please contact us at support@5letterwords.github.io.</p>
+      </div>
+    </div>
+  </main>
+
+  <div id="footer-root"></div>
+
+  <script src="words-data.js"></script>
+  <script src="components.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
