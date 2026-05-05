@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>5 Letter Words – Find, Learn & Explore Five Letter Words</title>
+  <meta name="description" content="Discover thousands of 5 letter words with our advanced word finder. Perfect for Wordle, Scrabble, crossword puzzles, and expanding your vocabulary. Search by letters, patterns, and more." />
+  <meta name="keywords" content="5 letter words, five letter words, word finder, wordle words, scrabble words, 5 letter word list, words with letters, word search" />
+  <meta name="robots" content="index, follow" />
+  <meta name="author" content="5LetterWords" />
+  <link rel="canonical" href="https://5letterwords.github.io/" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://5letterwords.github.io/" />
+  <meta property="og:title" content="5 Letter Words – Find, Learn & Explore Five Letter Words" />
+  <meta property="og:description" content="Advanced 5 letter word finder for Wordle, Scrabble, crosswords & vocabulary building." />
+  <meta property="og:image" content="https://5letterwords.github.io/og-image.png" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="5 Letter Words – Word Finder & Explorer" />
+  <meta name="twitter:description" content="Find 5 letter words by pattern, letters, or starting/ending letters. Perfect for word games!" />
+
+  <!-- Schema Markup -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://5letterwords.github.io/#website",
+        "url": "https://5letterwords.github.io/",
+        "name": "5 Letter Words",
+        "description": "The ultimate resource for finding and learning 5 letter words",
+        "potentialAction": {
+          "@type": "SearchAction",
+          "target": {
+            "@type": "EntryPoint",
+            "urlTemplate": "https://5letterwords.github.io/?q={search_term_string}"
+          },
+          "query-input": "required name=search_term_string"
+        }
+      },
+      {
+        "@type": "WebPage",
+        "@id": "https://5letterwords.github.io/#webpage",
+        "url": "https://5letterwords.github.io/",
+        "name": "5 Letter Words – Find, Learn & Explore",
+        "isPartOf": { "@id": "https://5letterwords.github.io/#website" },
+        "primaryImageOfPage": { "@id": "https://5letterwords.github.io/#primaryimage" },
+        "description": "Find thousands of 5 letter words using our advanced word finder tool.",
+        "breadcrumb": { "@id": "https://5letterwords.github.io/#breadcrumb" }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://5letterwords.github.io/#breadcrumb",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Home",
+            "item": "https://5letterwords.github.io/"
+          }
+        ]
+      },
+      {
+        "@type": "SoftwareApplication",
+        "name": "5 Letter Words Finder",
+        "applicationCategory": "EducationalApplication",
+        "operatingSystem": "Web",
+        "url": "https://5letterwords.github.io/",
+        "description": "Advanced word finder for 5 letter words. Filter by starting letter, ending letter, included letters, and pattern matching.",
+        "featureList": ["Word search by pattern", "Filter by starting letter", "Filter by ending letter", "Must-include letters", "Wordle helper mode", "Scrabble word finder"]
+      }
+    ]
+  }
+  </script>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@400;500;600;700;800&family=Baloo+2:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- Header Component -->
+  <div id="header-root"></div>
+
+  <main>
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+      <div class="hero-bg-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+        <div class="shape shape-4"></div>
+        <div class="floating-letters" id="floatingLetters"></div>
+      </div>
+      <div class="container hero-content">
+        <div class="hero-badge animate-in">🎯 #1 Word Finder Tool</div>
+        <h1 class="hero-title animate-in delay-1">
+          Explore <span class="highlight">5 Letter</span><br/>Words Instantly
+        </h1>
+        <p class="hero-subtitle animate-in delay-2">
+          The ultimate word finder for <strong>Wordle</strong>, <strong>Scrabble</strong>, crosswords & vocabulary building. Search thousands of five-letter words in seconds.
+        </p>
+        <div class="hero-tiles animate-in delay-3">
+          <div class="tile tile-green">W</div>
+          <div class="tile tile-yellow">O</div>
+          <div class="tile tile-green">R</div>
+          <div class="tile tile-gray">D</div>
+          <div class="tile tile-green">S</div>
+        </div>
+        <div class="hero-cta animate-in delay-4">
+          <a href="#finder" class="btn btn-primary">Start Finding Words ↓</a>
+          <a href="#word-lists" class="btn btn-secondary">Browse Word Lists</a>
+        </div>
+        <div class="hero-stats animate-in delay-5">
+          <div class="stat"><span class="stat-num" data-target="8500">0</span><span class="stat-label">5-Letter Words</span></div>
+          <div class="stat-divider"></div>
+          <div class="stat"><span class="stat-num" data-target="26">0</span><span class="stat-label">Starting Letters</span></div>
+          <div class="stat-divider"></div>
+          <div class="stat"><span class="stat-num" data-target="100">0</span><span class="stat-label">% Free</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Word Finder Tool -->
+    <section class="finder-section" id="finder">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">🔍 Word Finder</span>
+          <h2>Advanced 5 Letter Word Finder</h2>
+          <p>Use our powerful filters to find exactly the words you need for any word game or vocabulary activity.</p>
+        </div>
+        <div class="finder-card">
+          <div class="finder-tabs">
+            <button class="tab-btn active" data-tab="basic">Basic Search</button>
+            <button class="tab-btn" data-tab="pattern">Pattern Search</button>
+            <button class="tab-btn" data-tab="wordle">Wordle Helper</button>
+          </div>
+
+          <!-- Basic Search Tab -->
+          <div class="tab-content active" id="tab-basic">
+            <div class="finder-grid">
+              <div class="finder-field">
+                <label>Starts With</label>
+                <input type="text" id="startsWith" placeholder="e.g. br" maxlength="4" />
+              </div>
+              <div class="finder-field">
+                <label>Ends With</label>
+                <input type="text" id="endsWith" placeholder="e.g. ight" maxlength="4" />
+              </div>
+              <div class="finder-field">
+                <label>Contains Letters</label>
+                <input type="text" id="contains" placeholder="e.g. ae" maxlength="5" />
+              </div>
+              <div class="finder-field">
+                <label>Exclude Letters</label>
+                <input type="text" id="excludes" placeholder="e.g. xyz" maxlength="10" />
+              </div>
+            </div>
+            <div class="finder-actions">
+              <button class="btn btn-primary" id="searchBtn">🔍 Find Words</button>
+              <button class="btn btn-ghost" id="resetBtn">↺ Reset</button>
+            </div>
+          </div>
+
+          <!-- Pattern Search Tab -->
+          <div class="tab-content" id="tab-pattern">
+            <p class="pattern-hint">Use <code>?</code> for any unknown letter. Example: <code>br??k</code> → brick, brook, brisk</p>
+            <div class="pattern-input-wrap">
+              <div class="pattern-boxes" id="patternBoxes">
+                <input class="pattern-box" type="text" maxlength="1" placeholder="?" data-pos="0" />
+                <input class="pattern-box" type="text" maxlength="1" placeholder="?" data-pos="1" />
+                <input class="pattern-box" type="text" maxlength="1" placeholder="?" data-pos="2" />
+                <input class="pattern-box" type="text" maxlength="1" placeholder="?" data-pos="3" />
+                <input class="pattern-box" type="text" maxlength="1" placeholder="?" data-pos="4" />
+              </div>
+            </div>
+            <div class="finder-actions">
+              <button class="btn btn-primary" id="patternSearchBtn">🔍 Search Pattern</button>
+              <button class="btn btn-ghost" id="patternResetBtn">↺ Clear</button>
+            </div>
+          </div>
+
+          <!-- Wordle Helper Tab -->
+          <div class="tab-content" id="tab-wordle">
+            <p class="pattern-hint">Enter your Wordle guesses. Click each tile to mark: <span class="wl-green">Green</span> = correct, <span class="wl-yellow">Yellow</span> = wrong position, <span class="wl-gray">Gray</span> = not in word.</p>
+            <div class="wordle-rows" id="wordleRows">
+              <!-- Generated by JS -->
+            </div>
+            <div class="finder-actions">
+              <button class="btn btn-primary" id="wordleSearchBtn">🎯 Find Matches</button>
+              <button class="btn btn-ghost" id="wordleResetBtn">↺ New Puzzle</button>
+            </div>
+          </div>
+
+          <!-- Sort & Filter Bar -->
+          <div class="results-controls" id="resultsControls" style="display:none">
+            <div class="results-info" id="resultsInfo"></div>
+            <div class="sort-controls">
+              <label>Sort:</label>
+              <select id="sortSelect">
+                <option value="alpha">A–Z</option>
+                <option value="alpha-desc">Z–A</option>
+                <option value="scrabble">Scrabble Score</option>
+                <option value="vowels">Most Vowels</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Results -->
+          <div class="results-container" id="resultsContainer">
+            <div class="results-placeholder">
+              <div class="placeholder-icon">📝</div>
+              <p>Your word results will appear here.</p>
+              <p class="placeholder-sub">Try searching with the filters above!</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Word Lists by Starting Letter -->
+    <section class="word-lists-section" id="word-lists">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">📚 Word Lists</span>
+          <h2>5 Letter Words by Starting Letter</h2>
+          <p>Browse our comprehensive lists of five letter words organized alphabetically.</p>
+        </div>
+        <div class="alpha-grid" id="alphaGrid"></div>
+        <div class="letter-words-display" id="letterWordsDisplay"></div>
+      </div>
+    </section>
+
+    <!-- Common 5 Letter Words -->
+    <section class="common-words-section" id="common-words">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">⭐ Popular Words</span>
+          <h2>Most Common 5 Letter Words</h2>
+          <p>These frequently used five-letter words appear most often in everyday English — essential for word games and vocabulary building.</p>
+        </div>
+        <div class="word-category-tabs">
+          <button class="cat-btn active" data-cat="common">Common Words</button>
+          <button class="cat-btn" data-cat="vowels">Most Vowels</button>
+          <button class="cat-btn" data-cat="scrabble">Top Scrabble</button>
+          <button class="cat-btn" data-cat="wordle">Wordle Starters</button>
+        </div>
+        <div class="word-chips-container" id="wordChips"></div>
+      </div>
+    </section>
+
+    <!-- Scrabble Section -->
+    <section class="scrabble-section" id="scrabble">
+      <div class="container">
+        <div class="scrabble-inner">
+          <div class="scrabble-text">
+            <span class="section-tag">🎲 Scrabble</span>
+            <h2>5 Letter Words for Scrabble</h2>
+            <p>Dominate your Scrabble games with high-scoring five letter words. We show you the point value of every word so you can maximize your score.</p>
+            <ul class="feature-list">
+              <li>✅ Official Scrabble dictionary (TWL & SOWPODS)</li>
+              <li>✅ Point value calculated for each word</li>
+              <li>✅ Filter by minimum score</li>
+              <li>✅ Double & triple letter/word awareness</li>
+            </ul>
+            <div class="scrabble-filter">
+              <label>Min Score:</label>
+              <input type="range" id="minScore" min="5" max="20" value="5" />
+              <span id="minScoreVal">5+</span>
+              <button class="btn btn-primary btn-sm" id="scrabbleSearchBtn">Find Words</button>
+            </div>
+          </div>
+          <div class="scrabble-board" id="scrabbleBoard">
+            <!-- Generated by JS -->
+          </div>
+        </div>
+        <div class="scrabble-results" id="scrabbleResults"></div>
+      </div>
+    </section>
+
+    <!-- By Length Section -->
+    <section class="by-length-section" id="by-length">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">🔢 Word Lengths</span>
+          <h2>Words by Number of Letters</h2>
+          <p>Explore our complete word finder database organized by letter count — from 1-letter words all the way to 9-letter words.</p>
+        </div>
+        <div class="length-cards" id="lengthCards"></div>
+      </div>
+    </section>
+
+    <!-- Educational Content Section -->
+    <section class="edu-section" id="learn">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">🎓 Learn</span>
+          <h2>Everything About 5 Letter Words</h2>
+          <p>Deepen your understanding of five-letter words in the English language.</p>
+        </div>
+        <div class="edu-grid">
+          <div class="edu-card">
+            <div class="edu-icon">📖</div>
+            <h3>What Are 5 Letter Words?</h3>
+            <p>Five-letter words are words composed of exactly five alphabetic characters. The English language contains over 8,500 commonly used five-letter words, making them one of the most frequent word lengths in everyday communication.</p>
+            <p>From simple words like <strong>apple</strong>, <strong>bread</strong>, and <strong>chair</strong> to more advanced vocabulary like <strong>quaff</strong>, <strong>vivid</strong>, and <strong>jazzy</strong>, five-letter words span every category of the English lexicon.</p>
+          </div>
+          <div class="edu-card">
+            <div class="edu-icon">🧠</div>
+            <h3>Why Learn 5 Letter Words?</h3>
+            <p>Learning five-letter words has significant benefits for both language learners and word game enthusiasts:</p>
+            <ul>
+              <li>🎯 Wordle uses a new five-letter word every day</li>
+              <li>📚 Improves reading comprehension and fluency</li>
+              <li>🎲 Essential for Scrabble and crossword success</li>
+              <li>✍️ Enhances writing variety and precision</li>
+              <li>🗣️ Boosts verbal communication skills</li>
+            </ul>
+          </div>
+          <div class="edu-card">
+            <div class="edu-icon">💡</div>
+            <h3>Tips for Finding 5 Letter Words</h3>
+            <p>When solving word puzzles or searching for the right word, keep these strategies in mind:</p>
+            <ul>
+              <li>🔤 Common endings: -TION, -NESS, -MENT, -IGHT</li>
+              <li>🔡 Common prefixes: UN-, RE-, IN-, PRE-</li>
+              <li>🅰️ Vowel-heavy starters: AUDIO, OUIJA, URAEI</li>
+              <li>📊 High-frequency letters: E, A, R, I, O, T</li>
+              <li>🧩 Use pattern matching for puzzles</li>
+            </ul>
+          </div>
+          <div class="edu-card">
+            <div class="edu-icon">🏆</div>
+            <h3>5 Letter Words in Word Games</h3>
+            <p>Five-letter words are the foundation of many popular word games:</p>
+            <p><strong>Wordle:</strong> The viral daily word game that uses one five-letter word per day. Players have six attempts to guess the word using color-coded feedback.</p>
+            <p><strong>Scrabble:</strong> Five-letter words often score well, especially when using premium squares. Words like QUAFF (21 pts) and JAZZY (36 pts) are game-changers.</p>
+            <p><strong>Crosswords:</strong> The most common word length in crossword puzzles, making a strong five-letter vocabulary essential.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Word of the Day -->
+    <section class="wotd-section" id="word-of-day">
+      <div class="container">
+        <div class="wotd-card">
+          <div class="wotd-label">📅 Word of the Day</div>
+          <div class="wotd-word" id="wotdWord">STOKE</div>
+          <div class="wotd-phonetic" id="wotdPhonetic">/stoʊk/</div>
+          <div class="wotd-pos" id="wotdPos">verb</div>
+          <div class="wotd-def" id="wotdDef">To tend or fuel a fire; to stir up or excite something or someone.</div>
+          <div class="wotd-example" id="wotdExample">"The exciting news helped stoke enthusiasm among the team."</div>
+          <div class="wotd-tiles" id="wotdTiles"></div>
+          <button class="btn btn-primary" id="nextWordBtn">Next Word →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Textual SEO Content: Letter-length words -->
+    <section class="seo-content-section" id="word-length-guide">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">📘 Word Guide</span>
+          <h2>Complete Guide to Words by Letter Count</h2>
+          <p>Understanding words by their length is fundamental to mastering word games, building vocabulary, and improving your language skills.</p>
+        </div>
+        <div class="seo-accordion" id="seoAccordion">
+          <!-- Generated by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- Quick Reference -->
+    <section class="quick-ref-section" id="quick-ref">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">⚡ Quick Reference</span>
+          <h2>5 Letter Words — Quick Lists</h2>
+          <p>Handy reference lists to bookmark and use in your next word game.</p>
+        </div>
+        <div class="quick-ref-grid" id="quickRefGrid">
+          <!-- Generated by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section" id="faq">
+      <div class="container">
+        <div class="section-header">
+          <span class="section-tag">❓ FAQ</span>
+          <h2>Frequently Asked Questions</h2>
+          <p>Everything you need to know about 5 letter words and our word finder tool.</p>
+        </div>
+        <div class="faq-list" id="faqList">
+          <!-- Generated by JS -->
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer Component -->
+  <div id="footer-root"></div>
+
+  <!-- Word data & scripts -->
+  <script src="words-data.js"></script>
+  <script src="components.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
