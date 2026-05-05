@@ -1,867 +1,432 @@
-// ============================================
-// app.js - Main Application Logic
-// ============================================
+/**
+ * 5 Letter Words - Main Application Logic
+ * Version: 1.0.0
+ * 2026
+ */
 
-// Wait for DOM to load
 document.addEventListener('DOMContentLoaded', () => {
-    // Initialize all components
-    initHeader();
-    initFooter();
-    initFloatingLetters();
-    initStatsCounter();
-    initWordFinder();
-    initAlphaGrid();
-    initCommonWords();
-    initScrabbleSection();
-    initLengthCards();
-    initWordOfTheDay();
-    initSEOAccordion();
-    initQuickReference();
-    initFAQ();
-    initScrollReveal();
-    initMobileMenu();
-    initTabSystem();
+    // 1. DATA & STATE MANAGEMENT
+    // Assuming WORDS_DATA is globally available from words-data.js
+    const words = typeof WORDS_DATA !== 'undefined' ? WORDS_DATA : [];
+    
+    const SCRABBLE_POINTS = {
+        a: 1, b: 3, c: 3, d: 2, e: 1, f: 4, g: 2, h: 4, i: 1, j: 8, k: 5, l: 1, m: 3,
+        n: 1, o: 1, p: 3, q: 10, r: 1, s: 1, t: 1, u: 1, v: 4, w: 4, x: 8, y: 4, z: 10
+    };
+
+    const state = {
+        activeTab: 'basic',
+        currentResults: [],
+        wordleGuesses: Array(6).fill(null).map(() => Array(5).fill({ letter: '', state: 'gray' })),
+        wotdIndex: Math.floor(Math.random() * 100)
+    };
+
+    // 2. COMPONENT INITIALIZATION
+    initUI();
+    initCounters();
     initWordleHelper();
-    initPatternSearch();
-});
+    initAlphabetGrid();
+    initCommonWords();
+    initScrabbleBoard();
+    initLengthCards();
+    initAccordions();
+    initWOTD();
 
-// ============================================
-// Header & Footer
-// ============================================
-function initHeader() {
-    const headerRoot = document.getElementById('header-root');
-    if (!headerRoot) return;
-    
-    headerRoot.innerHTML = `
-        <header class="site-header">
-            <div class="container header-inner">
-                <a href="#home" class="logo">
-                    <div class="logo-icon">5L</div>
-                    <div class="logo-text">5<span>Letter</span>Words</div>
-                </a>
-                <nav>
-                    <ul class="nav-menu">
-                        <li><a href="#home" class="nav-link active">Home</a></li>
-                        <li><a href="#finder" class="nav-link">Word Finder</a></li>
-                        <li><a href="#word-lists" class="nav-link">Word Lists</a></li>
-                        <li><a href="#common-words" class="nav-link">Common Words</a></li>
-                        <li><a href="#scrabble" class="nav-link">Scrabble</a></li>
-                        <li><a href="#learn" class="nav-link">Learn</a></li>
-                    </ul>
-                    <button class="hamburger" id="hamburgerBtn">
-                        <span></span><span></span><span></span>
-                    </button>
-                </nav>
-            </div>
-            <div class="mobile-nav" id="mobileNav">
-                <a href="#home" class="nav-link">Home</a>
-                <a href="#finder" class="nav-link">Word Finder</a>
-                <a href="#word-lists" class="nav-link">Word Lists</a>
-                <a href="#common-words" class="nav-link">Common Words</a>
-                <a href="#scrabble" class="nav-link">Scrabble</a>
-                <a href="#learn" class="nav-link">Learn</a>
-            </div>
-        </header>
-    `;
-}
+    // --- UI & Navigation ---
 
-function initFooter() {
-    const footerRoot = document.getElementById('footer-root');
-    if (!footerRoot) return;
-    
-    footerRoot.innerHTML = `
-        <footer class="site-footer">
-            <div class="container">
-                <div class="footer-grid">
-                    <div class="footer-brand">
-                        <div class="logo-text">5<span>Letter</span>Words</div>
-                        <p>The ultimate resource for finding and learning 5 letter words. Perfect for Wordle, Scrabble, crosswords, and vocabulary building.</p>
-                        <div class="footer-letter-row" id="footerLetterRow"></div>
-                    </div>
-                    <div class="footer-col">
-                        <h4>Quick Links</h4>
-                        <ul class="footer-links">
-                            <li><a href="#finder">Word Finder</a></li>
-                            <li><a href="#word-lists">Word Lists</a></li>
-                            <li><a href="#common-words">Common Words</a></li>
-                            <li><a href="#scrabble">Scrabble Words</a></li>
-                        </ul>
-                    </div>
-                    <div class="footer-col">
-                        <h4>Resources</h4>
-                        <ul class="footer-links">
-                            <li><a href="#learn">Learning Guide</a></li>
-                            <li><a href="#word-of-day">Word of the Day</a></li>
-                            <li><a href="#faq">FAQ</a></li>
-                        </ul>
-                    </div>
-                    <div class="footer-col">
-                        <h4>Legal</h4>
-                        <ul class="footer-links">
-                            <li><a href="#">Privacy Policy</a></li>
-                            <li><a href="#">Terms of Use</a></li>
-                            <li><a href="#">Contact</a></li>
-                        </ul>
-                    </div>
-                </div>
-                <div class="footer-bottom">
-                    <p>© 2024 5 Letter Words. All rights reserved.</p>
-                    <div class="footer-bottom-links">
-                        <a href="#">Sitemap</a>
-                        <a href="#">Accessibility</a>
-                    </div>
-                </div>
-            </div>
-        </footer>
-    `;
-    
-    // Populate footer letters
-    const footerRow = document.getElementById('footerLetterRow');
-    if (footerRow) {
-        'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(letter => {
+    function initUI() {
+        // Render Header & Footer (Calls from components.js)
+        if (typeof renderHeader === 'function') renderHeader('header-root');
+        if (typeof renderFooter === 'function') renderFooter('footer-root');
+
+        // Tab Switching
+        const tabs = document.querySelectorAll('.tab-btn');
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                
+                tab.classList.add('active');
+                const target = document.getElementById(`tab-${tab.dataset.tab}`);
+                if (target) target.classList.add('active');
+                state.activeTab = tab.dataset.tab;
+            });
+        });
+
+        // Floating Letters in Hero
+        const container = document.getElementById('floatingLetters');
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        for (let i = 0; i < 15; i++) {
             const span = document.createElement('span');
-            span.className = 'footer-letter';
-            span.textContent = letter;
-            span.onclick = () => {
-                document.getElementById('alphaGrid')?.scrollIntoView({ behavior: 'smooth' });
-                const btn = document.querySelector(`.alpha-btn[data-letter="${letter}"]`);
-                btn?.click();
-            };
-            footerRow.appendChild(span);
-        });
-    }
-}
-
-function initMobileMenu() {
-    const hamburger = document.getElementById('hamburgerBtn');
-    const mobileNav = document.getElementById('mobileNav');
-    if (!hamburger || !mobileNav) return;
-    
-    hamburger.addEventListener('click', () => {
-        hamburger.classList.toggle('open');
-        mobileNav.classList.toggle('open');
-    });
-    
-    // Close when clicking a link
-    mobileNav.querySelectorAll('a').forEach(link => {
-        link.addEventListener('click', () => {
-            hamburger.classList.remove('open');
-            mobileNav.classList.remove('open');
-        });
-    });
-}
-
-// ============================================
-// Hero Animations
-// ============================================
-function initFloatingLetters() {
-    const container = document.getElementById('floatingLetters');
-    if (!container) return;
-    
-    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-    for (let i = 0; i < 15; i++) {
-        const span = document.createElement('span');
-        span.className = 'float-letter';
-        span.textContent = letters[Math.floor(Math.random() * letters.length)];
-        span.style.left = Math.random() * 100 + '%';
-        span.style.top = Math.random() * 100 + '%';
-        span.style.animationDelay = Math.random() * 10 + 's';
-        span.style.animationDuration = 8 + Math.random() * 10 + 's';
-        span.style.fontSize = 2 + Math.random() * 5 + 'rem';
-        container.appendChild(span);
-    }
-}
-
-function initStatsCounter() {
-    const stats = document.querySelectorAll('.stat-num[data-target]');
-    stats.forEach(stat => {
-        const target = parseInt(stat.getAttribute('data-target'));
-        if (target === 8500) {
-            stat.textContent = window.wordDatabase.words5.length.toLocaleString();
-        } else if (target === 26) {
-            stat.textContent = '26';
-        } else if (target === 100) {
-            stat.textContent = '100';
+            span.className = 'float-letter';
+            span.textContent = chars[Math.floor(Math.random() * chars.length)];
+            span.style.left = `${Math.random() * 100}%`;
+            span.style.top = `${Math.random() * 100}%`;
+            span.style.animationDelay = `${Math.random() * 5}s`;
+            container.appendChild(span);
         }
-    });
-}
-
-// ============================================
-// Word Finder Functionality
-// ============================================
-let currentResults = [];
-
-function initWordFinder() {
-    const searchBtn = document.getElementById('searchBtn');
-    const resetBtn = document.getElementById('resetBtn');
-    const startsWith = document.getElementById('startsWith');
-    const endsWith = document.getElementById('endsWith');
-    const contains = document.getElementById('contains');
-    const excludes = document.getElementById('excludes');
-    const sortSelect = document.getElementById('sortSelect');
-    
-    if (!searchBtn) return;
-    
-    const performSearch = () => {
-        let words = [...window.wordDatabase.words5];
-        
-        const starts = startsWith.value.toLowerCase();
-        if (starts) words = words.filter(w => w.toLowerCase().startsWith(starts));
-        
-        const ends = endsWith.value.toLowerCase();
-        if (ends) words = words.filter(w => w.toLowerCase().endsWith(ends));
-        
-        const inc = contains.value.toLowerCase();
-        if (inc) {
-            const letters = inc.split('');
-            words = words.filter(w => letters.every(l => w.toLowerCase().includes(l)));
-        }
-        
-        const exc = excludes.value.toLowerCase();
-        if (exc) {
-            const letters = exc.split('');
-            words = words.filter(w => !letters.some(l => w.toLowerCase().includes(l)));
-        }
-        
-        currentResults = words;
-        displayResults(currentResults);
-        showResultsControls();
-    };
-    
-    searchBtn.addEventListener('click', performSearch);
-    resetBtn.addEventListener('click', () => {
-        startsWith.value = '';
-        endsWith.value = '';
-        contains.value = '';
-        excludes.value = '';
-        performSearch();
-    });
-    
-    sortSelect?.addEventListener('change', () => {
-        sortResults();
-        displayResults(currentResults);
-    });
-    
-    // Initial search to show all words
-    performSearch();
-}
-
-function sortResults() {
-    const sortBy = document.getElementById('sortSelect')?.value || 'alpha';
-    
-    switch(sortBy) {
-        case 'alpha':
-            currentResults.sort((a, b) => a.localeCompare(b));
-            break;
-        case 'alpha-desc':
-            currentResults.sort((a, b) => b.localeCompare(a));
-            break;
-        case 'scrabble':
-            currentResults.sort((a, b) => window.wordDatabase.getScrabbleScore(b) - window.wordDatabase.getScrabbleScore(a));
-            break;
-        case 'vowels':
-            currentResults.sort((a, b) => window.wordDatabase.countVowels(b) - window.wordDatabase.countVowels(a));
-            break;
     }
-}
 
-function displayResults(words) {
-    const container = document.getElementById('resultsContainer');
-    const resultsInfo = document.getElementById('resultsInfo');
-    
-    if (!container) return;
-    
-    if (!words || words.length === 0) {
-        container.innerHTML = `
-            <div class="results-placeholder">
-                <div class="placeholder-icon">🔍</div>
-                <p>No words found matching your criteria.</p>
-                <p class="placeholder-sub">Try different letters or reset filters.</p>
-            </div>
-        `;
-        if (resultsInfo) resultsInfo.textContent = 'No results found';
-        return;
-    }
-    
-    const html = `
-        <div class="words-grid">
-            ${words.slice(0, 200).map(word => `
-                <div class="word-chip" onclick="copyWord('${word}')">
-                    ${word}
-                    <span class="score">${window.wordDatabase.getScrabbleScore(word)} pts</span>
-                </div>
-            `).join('')}
-        </div>
-        ${words.length > 200 ? `<p class="text-center mt-16" style="color: var(--text-light);">Showing 200 of ${words.length} words</p>` : ''}
-    `;
-    
-    container.innerHTML = html;
-    if (resultsInfo) resultsInfo.textContent = `Found ${words.length} words`;
-}
-
-function showResultsControls() {
-    const controls = document.getElementById('resultsControls');
-    if (controls) controls.style.display = 'flex';
-}
-
-// Copy word to clipboard
-window.copyWord = function(word) {
-    navigator.clipboard.writeText(word);
-    showToast(`"${word}" copied to clipboard!`);
-};
-
-function showToast(message) {
-    let toast = document.querySelector('.toast');
-    if (!toast) {
-        toast = document.createElement('div');
-        toast.className = 'toast';
-        document.body.appendChild(toast);
-    }
-    toast.textContent = message;
-    toast.classList.add('show');
-    setTimeout(() => toast.classList.remove('show'), 2000);
-}
-
-// ============================================
-// Pattern Search
-// ============================================
-function initPatternSearch() {
-    const patternBoxes = document.querySelectorAll('.pattern-box');
-    const searchBtn = document.getElementById('patternSearchBtn');
-    const resetBtn = document.getElementById('patternResetBtn');
-    
-    // Auto-focus and move to next input
-    patternBoxes.forEach((box, idx) => {
-        box.addEventListener('input', (e) => {
-            if (e.target.value.length === 1 && idx < 4) {
-                patternBoxes[idx + 1].focus();
-            }
-        });
-    });
-    
-    searchBtn?.addEventListener('click', () => {
-        const pattern = Array.from(patternBoxes).map(box => {
-            const val = box.value.trim();
-            return val ? val.toLowerCase() : '?';
-        }).join('');
-        
-        const regex = new RegExp('^' + pattern.replace(/\?/g, '.') + '$', 'i');
-        const matches = window.wordDatabase.words5.filter(word => regex.test(word));
-        currentResults = matches;
-        displayResults(currentResults);
-        showResultsControls();
-    });
-    
-    resetBtn?.addEventListener('click', () => {
-        patternBoxes.forEach(box => box.value = '');
-        patternBoxes[0].focus();
-    });
-}
-
-// ============================================
-// Tab System
-// ============================================
-function initTabSystem() {
-    const tabBtns = document.querySelectorAll('.tab-btn');
-    const tabContents = document.querySelectorAll('.tab-content');
-    
-    tabBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const tabId = btn.getAttribute('data-tab');
-            
-            tabBtns.forEach(b => b.classList.remove('active'));
-            tabContents.forEach(c => c.classList.remove('active'));
-            
-            btn.classList.add('active');
-            const activeTab = document.getElementById(`tab-${tabId}`);
-            if (activeTab) activeTab.classList.add('active');
-        });
-    });
-}
-
-// ============================================
-// Wordle Helper
-// ============================================
-let wordleRows = [];
-
-function initWordleHelper() {
-    const container = document.getElementById('wordleRows');
-    const searchBtn = document.getElementById('wordleSearchBtn');
-    const resetBtn = document.getElementById('wordleResetBtn');
-    
-    if (!container) return;
-    
-    // Create 6 rows
-    for (let r = 0; r < 6; r++) {
-        const row = document.createElement('div');
-        row.className = 'wordle-row';
-        row.dataset.row = r;
-        
-        for (let c = 0; c < 5; c++) {
-            const cell = document.createElement('div');
-            cell.className = 'wordle-cell';
-            cell.dataset.row = r;
-            cell.dataset.col = c;
-            cell.dataset.state = 'empty';
-            
-            const input = document.createElement('input');
-            input.type = 'text';
-            input.maxLength = 1;
-            input.placeholder = '?';
-            
-            input.addEventListener('input', (e) => {
-                const val = e.target.value.toUpperCase();
-                if (val && /[A-Z]/i.test(val)) {
-                    input.value = val;
-                    cell.classList.remove('state-green', 'state-yellow', 'state-gray');
-                    cell.classList.add('state-empty');
-                    cell.dataset.state = 'empty';
-                } else {
-                    input.value = '';
+    function initCounters() {
+        const stats = document.querySelectorAll('.stat-num');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const target = parseInt(entry.target.dataset.target);
+                    animateValue(entry.target, 0, target, 1500);
+                    observer.unobserve(entry.target);
                 }
             });
-            
-            cell.addEventListener('click', () => {
-                const states = ['empty', 'state-green', 'state-yellow', 'state-gray'];
-                const current = cell.dataset.state;
-                let next = states[(states.indexOf(current) + 1) % states.length];
-                cell.classList.remove(...states);
-                if (next !== 'empty') cell.classList.add(next);
-                cell.dataset.state = next;
-            });
-            
-            cell.appendChild(input);
-            row.appendChild(cell);
-        }
-        container.appendChild(row);
+        }, { threshold: 0.5 });
+
+        stats.forEach(stat => observer.observe(stat));
     }
-    
-    searchBtn?.addEventListener('click', () => {
-        const constraints = {
-            fixed: Array(5).fill(null),
-            yellow: [],
-            excluded: new Set()
+
+    function animateValue(obj, start, end, duration) {
+        let startTimestamp = null;
+        const step = (timestamp) => {
+            if (!startTimestamp) startTimestamp = timestamp;
+            const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+            obj.innerHTML = Math.floor(progress * (end - start) + start).toLocaleString();
+            if (progress < 1) {
+                window.requestAnimationFrame(step);
+            }
         };
-        
-        const rows = document.querySelectorAll('.wordle-row');
-        rows.forEach(row => {
-            const cells = row.querySelectorAll('.wordle-cell');
-            cells.forEach((cell, idx) => {
-                const input = cell.querySelector('input');
-                const letter = input?.value.toLowerCase();
-                const state = cell.dataset.state;
-                
-                if (!letter) return;
-                
-                if (state === 'state-green') {
-                    constraints.fixed[idx] = letter;
-                } else if (state === 'state-yellow') {
-                    constraints.yellow.push({ letter, position: idx });
-                } else if (state === 'state-gray') {
-                    constraints.excluded.add(letter);
-                }
-            });
-        });
-        
-        // Filter words based on constraints
-        let matches = window.wordDatabase.words5.filter(word => {
+        window.requestAnimationFrame(step);
+    }
+
+    // --- Search Functionality ---
+
+    // Basic Search
+    document.getElementById('searchBtn').addEventListener('click', () => {
+        const start = document.getElementById('startsWith').value.toLowerCase();
+        const end = document.getElementById('endsWith').value.toLowerCase();
+        const contains = document.getElementById('contains').value.toLowerCase().split('');
+        const excludes = document.getElementById('excludes').value.toLowerCase().split('');
+
+        const filtered = words.filter(word => {
             const w = word.toLowerCase();
-            
-            // Check fixed positions
-            for (let i = 0; i < 5; i++) {
-                if (constraints.fixed[i] && w[i] !== constraints.fixed[i]) return false;
-            }
-            
-            // Check yellow constraints
-            for (const y of constraints.yellow) {
-                if (!w.includes(y.letter)) return false;
-                if (w[y.position] === y.letter) return false;
-            }
-            
-            // Check excluded letters
-            for (const ex of constraints.excluded) {
-                if (w.includes(ex)) {
-                    // Don't exclude if it's fixed green
-                    let isFixed = false;
-                    for (let i = 0; i < 5; i++) {
-                        if (constraints.fixed[i] === ex) isFixed = true;
-                    }
-                    if (!isFixed) return false;
-                }
-            }
-            
-            return true;
+            const hasStart = w.startsWith(start);
+            const hasEnd = w.endsWith(end);
+            const hasContains = contains.every(l => w.includes(l));
+            const hasExcludes = !excludes.some(l => l !== '' && w.includes(l));
+            return hasStart && hasEnd && hasContains && hasExcludes;
         });
-        
-        currentResults = matches;
-        displayResults(currentResults);
-        showResultsControls();
+
+        displayResults(filtered);
     });
-    
-    resetBtn?.addEventListener('click', () => {
-        document.querySelectorAll('.wordle-row').forEach(row => {
-            row.querySelectorAll('.wordle-cell').forEach(cell => {
-                const input = cell.querySelector('input');
-                if (input) input.value = '';
-                cell.classList.remove('state-green', 'state-yellow', 'state-gray');
-                cell.classList.add('state-empty');
-                cell.dataset.state = 'empty';
+
+    // Pattern Search
+    document.getElementById('patternSearchBtn').addEventListener('click', () => {
+        const boxes = document.querySelectorAll('.pattern-box');
+        const pattern = Array.from(boxes).map(b => b.value.toLowerCase() || '?');
+        
+        const filtered = words.filter(word => {
+            const w = word.toLowerCase();
+            return pattern.every((char, i) => char === '?' || w[i] === char);
+        });
+
+        displayResults(filtered);
+    });
+
+    // --- Wordle Helper ---
+
+    function initWordleHelper() {
+        const grid = document.getElementById('wordleRows');
+        grid.innerHTML = '';
+        
+        for (let r = 0; r < 3; r++) { // Showing 3 rows for helper
+            const row = document.createElement('div');
+            row.className = 'wordle-row';
+            for (let c = 0; c < 5; c++) {
+                const cell = document.createElement('div');
+                cell.className = 'wordle-cell state-gray';
+                cell.innerHTML = `<input type="text" maxlength="1" data-row="${r}" data-col="${c}">`;
+                
+                // Toggle state on click
+                cell.addEventListener('click', (e) => {
+                    if (e.target.tagName === 'INPUT') return;
+                    cycleCellState(cell);
+                });
+                
+                row.appendChild(cell);
+            }
+            grid.appendChild(row);
+        }
+    }
+
+    function cycleCellState(cell) {
+        const states = ['state-gray', 'state-yellow', 'state-green'];
+        let currentIdx = states.findIndex(s => cell.classList.contains(s));
+        cell.classList.remove(states[currentIdx]);
+        cell.classList.add(states[(currentIdx + 1) % states.length]);
+    }
+
+    document.getElementById('wordleSearchBtn').addEventListener('click', () => {
+        const cells = document.querySelectorAll('.wordle-cell');
+        let mustInclude = new Set();
+        let mustExclude = new Set();
+        let constraints = []; // {pos, char, type}
+
+        cells.forEach(cell => {
+            const char = cell.querySelector('input').value.toLowerCase();
+            if (!char) return;
+
+            if (cell.classList.contains('state-green')) {
+                constraints.push({ pos: cell.querySelector('input').dataset.col, char, type: 'exact' });
+                mustInclude.add(char);
+            } else if (cell.classList.contains('state-yellow')) {
+                constraints.push({ pos: cell.querySelector('input').dataset.col, char, type: 'exclude-pos' });
+                mustInclude.add(char);
+            } else {
+                mustExclude.add(char);
+            }
+        });
+
+        const filtered = words.filter(word => {
+            const w = word.toLowerCase();
+            // Check exclusions (but allow if the letter is also marked green/yellow elsewhere)
+            for (let char of mustExclude) {
+                if (w.includes(char) && !mustInclude.has(char)) return false;
+            }
+            // Check inclusions
+            for (let char of mustInclude) {
+                if (!w.includes(char)) return false;
+            }
+            // Check positional constraints
+            return constraints.every(con => {
+                if (con.type === 'exact') return w[con.pos] === con.char;
+                if (con.type === 'exclude-pos') return w[con.pos] !== con.char;
+                return true;
             });
         });
-    });
-}
 
-// ============================================
-// Alphabet Grid - Word Lists by Starting Letter
-// ============================================
-function initAlphaGrid() {
-    const grid = document.getElementById('alphaGrid');
-    const display = document.getElementById('letterWordsDisplay');
-    
-    if (!grid) return;
-    
-    const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
-    
-    letters.forEach(letter => {
-        const btn = document.createElement('button');
-        btn.className = 'alpha-btn';
-        btn.textContent = letter;
-        btn.dataset.letter = letter;
-        btn.addEventListener('click', () => {
-            document.querySelectorAll('.alpha-btn').forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            
-            const words = window.wordDatabase.words5.filter(w => w.startsWith(letter));
-            const count = words.length;
-            
-            display.innerHTML = `
-                <div class="letter-display-header">
-                    <div class="letter-display-badge">${letter}</div>
-                    <div class="letter-display-info">
-                        <h3>Words starting with "${letter}"</h3>
-                        <p>Found ${count} five-letter words beginning with ${letter}</p>
-                    </div>
-                </div>
-                <div class="words-grid">
-                    ${words.slice(0, 100).map(word => `
-                        <div class="word-chip" onclick="copyWord('${word}')">
-                            ${word}
-                            <span class="score">${window.wordDatabase.getScrabbleScore(word)} pts</span>
-                        </div>
-                    `).join('')}
-                </div>
-                ${count > 100 ? `<p class="text-center mt-16">Showing 100 of ${count} words</p>` : ''}
-            `;
-        });
-        grid.appendChild(btn);
+        displayResults(filtered);
     });
-    
-    // Trigger first letter
-    document.querySelector('.alpha-btn')?.click();
-}
 
-// ============================================
-// Common Words Section
-// ============================================
-function initCommonWords() {
-    const container = document.getElementById('wordChips');
-    const catBtns = document.querySelectorAll('.cat-btn');
-    
-    if (!container) return;
-    
-    const getWordsByCategory = (category) => {
-        switch(category) {
-            case 'common':
-                return window.wordDatabase.words5.slice(0, 50);
-            case 'vowels':
-                return [...window.wordDatabase.words5].sort((a, b) => window.wordDatabase.countVowels(b) - window.wordDatabase.countVowels(a)).slice(0, 30);
-            case 'scrabble':
-                return [...window.wordDatabase.words5].sort((a, b) => window.wordDatabase.getScrabbleScore(b) - window.wordDatabase.getScrabbleScore(a)).slice(0, 30);
-            case 'wordle':
-                const starters = ['ADIEU', 'AUDIO', 'ARISE', 'CRANE', 'SLATE', 'SOARE', 'ROATE', 'RAISE', 'STARE', 'TRACE'];
-                return starters;
-            default:
-                return window.wordDatabase.words5.slice(0, 50);
-        }
-    };
-    
-    const renderCategory = (category) => {
-        const words = getWordsByCategory(category);
-        container.innerHTML = words.map(word => `
-            <div class="word-chip" onclick="copyWord('${word}')">
-                ${word}
-                <span class="score">${window.wordDatabase.getScrabbleScore(word)} pts</span>
-            </div>
-        `).join('');
-    };
-    
-    catBtns.forEach(btn => {
-        btn.addEventListener('click', () => {
-            catBtns.forEach(b => b.classList.remove('active'));
-            btn.classList.add('active');
-            renderCategory(btn.dataset.cat);
-        });
-    });
-    
-    renderCategory('common');
-}
+    // --- Results Rendering ---
 
-// ============================================
-// Scrabble Section
-// ============================================
-function initScrabbleSection() {
-    const board = document.getElementById('scrabbleBoard');
-    const searchBtn = document.getElementById('scrabbleSearchBtn');
-    const minScoreSlider = document.getElementById('minScore');
-    const minScoreVal = document.getElementById('minScoreVal');
-    const resultsContainer = document.getElementById('scrabbleResults');
-    
-    if (board) {
-        const highValueLetters = [
-            { letter: 'Q', pts: 10 },
-            { letter: 'U', pts: 1 },
-            { letter: 'A', pts: 1 },
-            { letter: 'Z', pts: 10 },
-            { letter: 'Z', pts: 10 }
-        ];
-        board.innerHTML = highValueLetters.map(tile => `
-            <div class="scrabble-tile">
-                <div class="scrabble-tile-letter">${tile.letter}</div>
-                <div class="scrabble-tile-pts">${tile.pts}</div>
-            </div>
-        `).join('');
-    }
-    
-    minScoreSlider?.addEventListener('input', (e) => {
-        if (minScoreVal) minScoreVal.textContent = e.target.value + '+';
-    });
-    
-    searchBtn?.addEventListener('click', () => {
-        const minScore = parseInt(minScoreSlider?.value || 5);
-        const words = window.wordDatabase.words5.filter(w => window.wordDatabase.getScrabbleScore(w) >= minScore);
-        const sorted = [...words].sort((a, b) => window.wordDatabase.getScrabbleScore(b) - window.wordDatabase.getScrabbleScore(a)).slice(0, 50);
+    function displayResults(results) {
+        const container = document.getElementById('resultsContainer');
+        const controls = document.getElementById('resultsControls');
+        const info = document.getElementById('resultsInfo');
         
-        if (resultsContainer) {
-            resultsContainer.innerHTML = `
-                <div class="words-grid" style="margin-top: 32px;">
-                    ${sorted.map(word => `
-                        <div class="word-chip" onclick="copyWord('${word}')">
-                            ${word}
-                            <span class="score">${window.wordDatabase.getScrabbleScore(word)} pts</span>
-                        </div>
-                    `).join('')}
-                </div>
-            `;
+        state.currentResults = results;
+        controls.style.display = results.length > 0 ? 'flex' : 'none';
+        
+        if (results.length === 0) {
+            container.innerHTML = `
+                <div class="no-results">
+                    <div class="no-results-icon">🤷‍♂️</div>
+                    <h3>No matches found</h3>
+                    <p>Try adjusting your filters or using fewer constraints.</p>
+                </div>`;
+            return;
         }
-    });
-}
 
-// ============================================
-// Length Cards
-// ============================================
-function initLengthCards() {
-    const container = document.getElementById('lengthCards');
-    if (!container) return;
-    
-    const lengths = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-    
-    lengths.forEach(len => {
-        const count = window.wordDatabase.wordsByLength[len]?.length || 0;
-        const card = document.createElement('div');
-        card.className = `length-card ${len === 5 ? 'featured' : ''}`;
-        card.innerHTML = `
-            <div class="length-num">${len}</div>
-            <div class="length-label">${len}-Letter Words</div>
-            <div class="length-count">${count.toLocaleString()} words</div>
-            ${len === 5 ? '<div class="length-badge">Most Popular</div>' : ''}
-        `;
-        card.addEventListener('click', () => {
-            if (len === 5) {
-                document.getElementById('finder')?.scrollIntoView({ behavior: 'smooth' });
-            } else {
-                showToast(`${len}-letter words coming soon!`);
-            }
-        });
-        container.appendChild(card);
-    });
-}
-
-// ============================================
-// Word of the Day
-// ============================================
-let currentWOTD = null;
-
-function initWordOfTheDay() {
-    const words = window.wordDatabase.words5;
-    const randomIndex = Math.floor(Math.random() * words.length);
-    currentWOTD = words[randomIndex];
-    
-    updateWordOfTheDay(currentWOTD);
-    
-    const nextBtn = document.getElementById('nextWordBtn');
-    nextBtn?.addEventListener('click', () => {
-        let newIndex;
-        do {
-            newIndex = Math.floor(Math.random() * words.length);
-        } while (words[newIndex] === currentWOTD);
-        currentWOTD = words[newIndex];
-        updateWordOfTheDay(currentWOTD);
-    });
-}
-
-function updateWordOfTheDay(word) {
-    const wordEl = document.getElementById('wotdWord');
-    const defEl = document.getElementById('wotdDef');
-    const posEl = document.getElementById('wotdPos');
-    const phoneticEl = document.getElementById('wotdPhonetic');
-    const exampleEl = document.getElementById('wotdExample');
-    const tilesEl = document.getElementById('wotdTiles');
-    
-    if (wordEl) wordEl.textContent = word.toUpperCase();
-    if (phoneticEl) phoneticEl.textContent = `/${word.toLowerCase()}/`;
-    if (posEl) posEl.textContent = ['noun', 'verb', 'adjective'][Math.floor(Math.random() * 3)];
-    if (defEl) defEl.textContent = getRandomDefinition(word);
-    if (exampleEl) exampleEl.textContent = `"An example sentence using the word ${word.toLowerCase()} in context."`;
-    
-    if (tilesEl) {
-        tilesEl.innerHTML = word.split('').map(letter => `
-            <div class="wotd-tile">${letter.toUpperCase()}</div>
-        `).join('');
+        info.innerHTML = `Found <span>${results.length}</span> words`;
+        renderWordGrid(results);
+        showToast(`Found ${results.length} words!`);
     }
-}
 
-function getRandomDefinition(word) {
-    const definitions = [
-        `A five-letter word that can be used in various contexts. "${word}" is commonly found in word games.`,
-        `An interesting word that demonstrates the richness of the English language. "${word}" has ${word.length} letters.`,
-        `A useful word for word puzzles and vocabulary building. "${word}" appears in many word lists.`
-    ];
-    return definitions[Math.floor(Math.random() * definitions.length)];
-}
+    function renderWordGrid(resultsList) {
+        const container = document.getElementById('resultsContainer');
+        container.innerHTML = '<div class="words-grid"></div>';
+        const grid = container.querySelector('.words-grid');
 
-// ============================================
-// SEO Accordion
-// ============================================
-function initSEOAccordion() {
-    const container = document.getElementById('seoAccordion');
-    if (!container) return;
-    
-    const items = [
-        { title: 'What are 5 letter words?', content: 'Five-letter words are words that consist of exactly five alphabetic characters. They are among the most common word lengths in the English language, with thousands of examples ranging from everyday vocabulary like "apple" and "bread" to more specialized terms like "xenon" and "quaff".' },
-        { title: 'Why are 5 letter words important for Wordle?', content: 'Wordle specifically uses 5-letter words as its daily puzzle format. Having a strong vocabulary of five-letter words dramatically improves your chances of solving the puzzle in fewer attempts. Common starting words like "ARISE", "CRANE", or "STARE" can help you narrow down possibilities quickly.' },
-        { title: 'What are the highest scoring 5 letter words in Scrabble?', content: 'High-scoring 5-letter words often include rare letters like Q, Z, J, and X. Examples include "JAZZY" (36 points), "QUAFF" (20+ points), "ZAPPY" (21 points), and "JACKY" (21 points). Using these words on premium squares can yield even higher scores.' }
-    ];
-    
-    container.innerHTML = items.map((item, idx) => `
-        <div class="accordion-item" data-accordion="${idx}">
-            <div class="accordion-header">
-                <h3>${item.title}</h3>
-                <span class="accordion-icon">+</span>
-            </div>
-            <div class="accordion-body">
-                <p>${item.content}</p>
-            </div>
-        </div>
-    `).join('');
-    
-    document.querySelectorAll('.accordion-item').forEach(item => {
-        const header = item.querySelector('.accordion-header');
-        header.addEventListener('click', () => {
-            item.classList.toggle('open');
+        resultsList.slice(0, 100).forEach(word => {
+            const score = calculateScrabbleScore(word);
+            const chip = document.createElement('div');
+            chip.className = 'word-chip';
+            chip.innerHTML = `${word} <span class="score">${score} pts</span>`;
+            chip.onclick = () => copyToClipboard(word);
+            grid.appendChild(chip);
         });
-    });
-}
 
-// ============================================
-// Quick Reference
-// ============================================
-function initQuickReference() {
-    const container = document.getElementById('quickRefGrid');
-    if (!container) return;
-    
-    const categories = [
-        { title: '🎯 Top Wordle Starters', words: ['ADIEU', 'AUDIO', 'ARISE', 'STARE', 'CRANE', 'SLATE'] },
-        { title: '💰 High Scrabble Score', words: ['JAZZY', 'QUAFF', 'ZAPPY', 'XYLYL', 'JACKY', 'FRIZZ'] },
-        { title: '🔤 Common Endings', words: ['ING', 'TION', 'NESS', 'MENT', 'IGHT', 'OUND'] },
-        { title: '⭐ Most Common', words: ['ABOUT', 'OTHER', 'WHICH', 'THEIR', 'THERE', 'FIRST'] }
-    ];
-    
-    container.innerHTML = categories.map(cat => `
-        <div class="quick-ref-card">
-            <h3>${cat.title}</h3>
-            <div class="quick-ref-words">
-                ${cat.words.map(w => `<span class="quick-word" onclick="copyWord('${w}')">${w}</span>`).join('')}
-            </div>
-        </div>
-    `).join('');
-}
-
-// ============================================
-// FAQ Section
-// ============================================
-function initFAQ() {
-    const container = document.getElementById('faqList');
-    if (!container) return;
-    
-    const faqs = [
-        { q: 'How many 5 letter words are there in English?', a: 'There are approximately 8,500 to 9,000 commonly used 5-letter words in the English language. Our database contains over 8,500 words, making it one of the most comprehensive resources available.' },
-        { q: 'What is the best 5-letter word to start Wordle with?', a: 'Popular starting words include "ARISE", "CRANE", "STARE", "AUDIO", and "ADIEU". These words contain common vowels and frequently used consonants to maximize information from the first guess.' },
-        { q: 'Can I use this tool for other word games?', a: 'Absolutely! Our word finder works great for Scrabble, Words With Friends, crossword puzzles, anagrams, and any other word game that uses 5-letter words.' }
-    ];
-    
-    container.innerHTML = faqs.map((faq, idx) => `
-        <div class="faq-item" data-faq="${idx}">
-            <div class="faq-q">
-                <span>${faq.q}</span>
-                <span class="faq-icon">+</span>
-            </div>
-            <div class="faq-a">
-                <p>${faq.a}</p>
-            </div>
-        </div>
-    `).join('');
-    
-    document.querySelectorAll('.faq-item').forEach(item => {
-        const q = item.querySelector('.faq-q');
-        q.addEventListener('click', () => {
-            item.classList.toggle('open');
-        });
-    });
-}
-
-// ============================================
-// Scroll Reveal Animation
-// ============================================
-function initScrollReveal() {
-    const reveals = document.querySelectorAll('.reveal');
-    
-    // Add reveal class to sections
-    document.querySelectorAll('section').forEach(section => {
-        section.classList.add('reveal');
-    });
-    
-    const observer = new IntersectionObserver((entries) => {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-            }
-        });
-    }, { threshold: 0.1 });
-    
-    document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-}
-
-// ============================================
-// Smooth Scroll for Anchor Links
-// ============================================
-document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-    anchor.addEventListener('click', function(e) {
-        const href = this.getAttribute('href');
-        if (href === '#') return;
-        const target = document.querySelector(href);
-        if (target) {
-            e.preventDefault();
-            target.scrollIntoView({ behavior: 'smooth' });
+        if (resultsList.length > 100) {
+            const more = document.createElement('p');
+            more.className = 'placeholder-sub text-center mt-16';
+            more.textContent = `...and ${resultsList.length - 100} more words.`;
+            container.appendChild(more);
         }
+    }
+
+    // --- Sorting Logic ---
+    document.getElementById('sortSelect').addEventListener('change', (e) => {
+        const val = e.target.value;
+        let sorted = [...state.currentResults];
+
+        if (val === 'alpha') sorted.sort();
+        if (val === 'alpha-desc') sorted.sort().reverse();
+        if (val === 'scrabble') sorted.sort((a, b) => calculateScrabbleScore(b) - calculateScrabbleScore(a));
+        if (val === 'vowels') sorted.sort((a, b) => countVowels(b) - countVowels(a));
+
+        renderWordGrid(sorted);
     });
+
+    // --- Features & Misc ---
+
+    function initAlphabetGrid() {
+        const grid = document.getElementById('alphaGrid');
+        'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(letter => {
+            const btn = document.createElement('button');
+            btn.className = 'alpha-btn';
+            btn.textContent = letter;
+            btn.onclick = () => {
+                document.querySelectorAll('.alpha-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                loadLetterWords(letter);
+            };
+            grid.appendChild(btn);
+        });
+        // Load 'A' by default
+        loadLetterWords('A');
+    }
+
+    function loadLetterWords(letter) {
+        const display = document.getElementById('letterWordsDisplay');
+        const filtered = words.filter(w => w.toUpperCase().startsWith(letter)).slice(0, 50);
+        
+        display.innerHTML = `
+            <div class="letter-display-header">
+                <div class="letter-display-badge">${letter}</div>
+                <div class="letter-display-info">
+                    <h3>Words starting with ${letter}</h3>
+                    <p>Showing top 50 common words.</p>
+                </div>
+            </div>
+            <div class="words-grid">
+                ${filtered.map(w => `<div class="word-chip">${w}</div>`).join('')}
+            </div>
+        `;
+    }
+
+    function initCommonWords() {
+        const container = document.getElementById('wordChips');
+        const cats = document.querySelectorAll('.cat-btn');
+        
+        const loadCat = (cat) => {
+            let list = [];
+            if (cat === 'common') list = words.slice(0, 40);
+            if (cat === 'vowels') list = words.filter(w => countVowels(w) >= 3).slice(0, 40);
+            if (cat === 'scrabble') list = [...words].sort((a,b) => calculateScrabbleScore(b) - calculateScrabbleScore(a)).slice(0, 40);
+            if (cat === 'wordle') list = ['ARISE', 'ADIEU', 'ROATE', 'STARE', 'AUDIO', 'RAISE'].slice(0, 40);
+
+            container.innerHTML = list.map(w => `<div class="word-chip">${w}</div>`).join('');
+        };
+
+        cats.forEach(btn => {
+            btn.addEventListener('click', () => {
+                cats.forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                loadCat(btn.dataset.cat);
+            });
+        });
+
+        loadCat('common');
+    }
+
+    function initScrabbleBoard() {
+        const board = document.getElementById('scrabbleBoard');
+        const example = ['J', 'A', 'Z', 'Z', 'Y'];
+        board.innerHTML = '';
+        example.forEach(l => {
+            const tile = document.createElement('div');
+            tile.className = 'scrabble-tile';
+            tile.innerHTML = `
+                <div class="scrabble-tile-letter">${l}</div>
+                <div class="scrabble-tile-pts">${SCRABBLE_POINTS[l.toLowerCase()]}</div>
+            `;
+            board.appendChild(tile);
+        });
+    }
+
+    function initLengthCards() {
+        const container = document.getElementById('lengthCards');
+        for (let i = 1; i <= 9; i++) {
+            const card = document.createElement('div');
+            card.className = `length-card ${i === 5 ? 'featured' : ''}`;
+            card.innerHTML = `
+                <div class="length-num">${i}</div>
+                <div class="length-label">${i}-Letter Words</div>
+                <div class="length-count">Browse List</div>
+                ${i === 5 ? '<span class="length-badge">Popular</span>' : ''}
+            `;
+            container.appendChild(card);
+        }
+    }
+
+    function initAccordions() {
+        const data = [
+            { q: "What are the most common 5 letter words?", a: "The most common include: WHICH, THEIR, THERE, WOULD, OTHER, WORDS, ABOUT." },
+            { q: "How many 5 letter words are there in English?", a: "There are approximately 8,500 to 12,000 five-letter words depending on the dictionary used (Scrabble vs Standard)." },
+            { q: "What are the best Wordle starting words?", a: "Statistically, words like ARISE, SLATE, and CRANE are excellent starters as they use high-frequency letters." }
+        ];
+
+        const faqList = document.getElementById('faqList');
+        data.forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'faq-item';
+            div.innerHTML = `
+                <div class="faq-q"><span>${item.q}</span> <i class="faq-icon">+</i></div>
+                <div class="faq-a">${item.a}</div>
+            `;
+            div.querySelector('.faq-q').onclick = () => div.classList.toggle('open');
+            faqList.appendChild(div);
+        });
+    }
+
+    function initWOTD() {
+        const nextBtn = document.getElementById('nextWordBtn');
+        const wordsWOTD = [
+            { w: 'AMBER', p: '/ˈæm.bər/', pos: 'noun', d: 'A hard yellowish to brownish translucent fossil resin.', e: 'The insect was perfectly preserved in amber.' },
+            { w: 'BLISS', p: '/blɪs/', pos: 'noun', d: 'Perfect happiness; great joy.', e: 'The first day of vacation was pure bliss.' },
+            { w: 'CRISP', p: '/krɪsp/', pos: 'adj', d: 'Firm, dry, and brittle.', e: 'The autumn air was cool and crisp.' }
+        ];
+
+        let idx = 0;
+        const update = () => {
+            const item = wordsWOTD[idx];
+            document.getElementById('wotdWord').textContent = item.w;
+            document.getElementById('wotdPhonetic').textContent = item.p;
+            document.getElementById('wotdPos').textContent = item.pos;
+            document.getElementById('wotdDef').textContent = item.d;
+            document.getElementById('wotdExample').textContent = `"${item.e}"`;
+            
+            const tiles = document.getElementById('wotdTiles');
+            tiles.innerHTML = item.w.split('').map(l => `<div class="wotd-tile">${l}</div>`).join('');
+            idx = (idx + 1) % wordsWOTD.length;
+        };
+
+        nextBtn.onclick = update;
+        update();
+    }
+
+    // --- Helpers ---
+
+    function calculateScrabbleScore(word) {
+        return word.toLowerCase().split('').reduce((sum, char) => sum + (SCRABBLE_POINTS[char] || 0), 0);
+    }
+
+    function countVowels(word) {
+        return (word.match(/[aeiou]/gi) || []).length;
+    }
+
+    function copyToClipboard(text) {
+        navigator.clipboard.writeText(text).then(() => {
+            showToast(`Copied "${text}" to clipboard!`);
+        });
+    }
+
+    function showToast(msg) {
+        let toast = document.querySelector('.toast');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.className = 'toast';
+            document.body.appendChild(toast);
+        }
+        toast.textContent = msg;
+        toast.classList.add('show');
+        setTimeout(() => toast.classList.remove('show'), 3000);
+    }
 });
